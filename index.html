@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeVerse</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --card-bg: #1e1e1e;
+            --subtext-color: #aaa;
+            --accent-color: #ff4757;
+            --border-color: #333;
+        }
+
+        body.light-mode { 
+            --bg-color: #f5f5f5;
+            --text-color: #121212;
+            --card-bg: #ffffff;
+            --subtext-color: #666;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* TOP BAR */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+        }
+
+        .brand-logo {
+            color: var(--accent-color);
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            color: white;
+            border: 1px solid var(--accent-color);
+            padding: 7px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* LANDING SCREEN */
+        #landing-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 90px 20px 30px;
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.88)), url("bg-poster.jpg");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .landing-content {
+            margin: auto 0;
+        }
+
+        #landing-screen h1 {
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+            text-shadow: 0 4px 15px rgba(255, 71, 87, 0.6);
+        }
+
+        #landing-screen p {
+            font-size: 1.1rem;
+            color: #ddd;
+            margin-bottom: 30px;
+        }
+
+        .enter-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.5);
+        }
+
+        .landing-footer {
+            display: flex;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+
+        .landing-footer a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        /* HOME SCREEN */
+        #home-screen {
+            display: none;
+            padding: 90px 20px 30px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 13px 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            margin-bottom: 25px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        .anime-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .anime-poster {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #252525;
+        }
+
+        .anime-info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .anime-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .anime-genre {
+            font-size: 0.78rem;
+            color: var(--subtext-color);
+            margin-bottom: 10px;
+        }
+
+        .play-btn-small {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* PLAYER SCREEN */
+        #player-screen {
+            display: none;
+            padding: 90px 20px 30px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .back-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .video-container {
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #animeVideo {
+            width: 100%;
+            display: block;
+            background: #000;
+            aspect-ratio: 16 / 9;
+        }
+
+        /* FULLSCREEN FIX FOR VIDEO */
+        video:-webkit-full-screen { width: 100% !important; height: 100% !important; background: black; }
+        video:fullscreen { width: 100% !important; height: 100% !important; background: black; }
+
+        .player-title { font-size: 1.4rem; margin-bottom: 6px; }
+        .player-genre { font-size: 1rem; color: var(--subtext-color); }
+        .episode-heading { margin-top: 25px; margin-bottom: 10px; }
+        .episode-list { display: flex; gap: 10px; flex-wrap: wrap; }
+        .ep-btn {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .ep-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        @media (max-width: 500px) {
+            #landing-screen h1 { font-size: 2.2rem; }
+            #landing-screen p { font-size: 0.95rem; }
+            .anime-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .anime-poster { height: 210px; }
+            #player-screen { padding-left: 10px; padding-right: 10px; }
+        }
+/* FORCE FULLSCREEN FOR MOBILE */
+.video-container.force-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    background: #000 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+.video-container.force-fullscreen #animeVideo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+.fs-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <span class="brand-logo">ANIMEVERSE</span>
+        <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">☀️ Light</button>
+    </div>
+
+    <!-- LANDING -->
+    <div id="landing-screen">
+        <div class="landing-content">
+            <h1>ANIMEVERSE</h1>
+            <p>Your world of anime begins here.</p>
+            <button class="enter-btn" onclick="openHome()">ENTER WEBSITE</button>
+        </div>
+        <div class="landing-footer">
+            <a href="#">Privacy Policy</a> <span>•</span>
+            <a href="#">Terms of Service</a> <span>•</span>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <!-- HOME -->
+    <div id="home-screen">
+        <input type="text" class="search-box" id="searchInput" onkeyup="filterAnime()" placeholder="Search anime...">
+        <h2 class="section-title">Popular Anime</h2>
+        <div class="anime-grid">
+
+            <div class="anime-card" onclick="playAnime('Bleach', 'Action • Supernatural')">
+                <img src="bleach.jpg" class="anime-poster" alt="Bleach">
+                <div class="anime-info">
+                    <div class="anime-title">Bleach</div>
+                    <div class="anime-genre">Action • Supernatural</div>
+                    <button class="play-btn-small">▶ WATCH NOW</button>
+                </div>
+            </div>
+
+            <div class="anime-card" onclick="playAnime('Solo Leveling', 'Action • Fantasy')">
+                <img src="solo.jpg" class="anime-poster" alt="Solo Leveling">
+                <div class="anime-info">
+                    <div class="anime-title">Solo Leveling</div>
+                    <div class="anime-genre">Action • Fantasy</div>
+                    <button class="play-btn-small">▶ WATCH NOW</button>
+                </div>
+            </div>
+
+            <div class="anime-card" onclick="playAnime('Naruto', 'Action • Adventure')">
+                <img src="naruto.jpg" class="anime-poster" alt="Naruto">
+                <div class="anime-info">
+                    <div class="anime-title">Naruto</div>
+                    <div class="anime-genre">Action • Adventure</div>
+                    <button class="play-btn-small">▶ WATCH NOW</button>
+                </div>
+            </div>
+
+            <div class="anime-card" onclick="playAnime('Overflow', 'Romance • Drama')">
+                <img src="overflow.jpg" class="anime-poster" alt="Overflow">
+                <div class="anime-info">
+                    <div class="anime-title">Overflow</div>
+                    <div class="anime-genre">Romance • Drama</div>
+                    <button class="play-btn-small">▶ WATCH NOW</button>
+                </div>
+            </div>
+
+            <div class="anime-card" onclick="playAnime('Rent-a-Girlfriend', 'Romance • Comedy')">
+                <img src="Rent.jpg" class="anime-poster" alt="Rent-a-Girlfriend">
+                <div class="anime-info">
+                    <div class="anime-title">Rent-a-Girlfriend</div>
+                    <div class="anime-genre">Romance • Comedy</div>
+                    <button class="play-btn-small">▶ WATCH NOW</button>
+                </div>
+            </div>
+
+            <div class="anime-card" onclick="playAnime('Demon Slayer', 'Action • Fantasy')">
+                <img src="demon.jpg" class="anime-poster" alt="Demon Slayer">
+                <div class="anime-info">
+                    <div class="anime-title">Demon Slayer</div>
+                    <div class="anime-genre">Action • Fantasy</div>
+                    <button class="play-btn-small">▶ WATCH NOW</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PLAYER -->
+    <div id="player-screen">
+        <button class="back-btn" onclick="backToHome()">← Back to Catalog</button>
+        <div class="video-container">
+            <video id="animeVideo" controls playsinline preload="metadata">
+                <source src="bleach-Ep01.mp4" type="video/mp4">
+            </video>
+        </div>
+        <h2 id="playerAnimeTitle" class="player-title">Bleach</h2>
+        <p id="playerAnimeGenre" class="player-genre">Action • Supernatural</p>
+        <h3 class="episode-heading">Episodes</h3>
+        <div class="episode-list">
+            <button class="ep-btn active" onclick="playEpisode1()">Ep 1</button>
+            <button class="ep-btn">Ep 2</button>
+            <button class="ep-btn">Ep 3</button>
+            <button class="ep-btn">Ep 4</button>
+            <button class="ep-btn">Ep 5</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function openHome() {
+            document.getElementById("landing-screen").style.display = "none";
+            document.getElementById("player-screen").style.display = "none";
+            document.getElementById("home-screen").style.display = "block";
+            window.scrollTo(0, 0);
+        }
+
+        function playAnime(title, genre) {
+            document.getElementById("home-screen").style.display = "none";
+            document.getElementById("player-screen").style.display = "block";
+            document.getElementById("playerAnimeTitle").innerText = title;
+            document.getElementById("playerAnimeGenre").innerText = genre;
+            window.scrollTo(0, 0);
+
+            if (title === "Bleach") {
+                playEpisode1();
+            }
+        }
+
+        function playEpisode1() {
+            const video = document.getElementById("animeVideo");
+            video.currentTime = 0;
+            video.load();
+            video.play();
+        }
+
+        function backToHome() {
+            const video = document.getElementById("animeVideo");
+            video.pause();
+            document.getElementById("player-screen").style.display = "none";
+            document.getElementById("home-screen").style.display = "block";
+            window.scrollTo(0, 0);
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.getElementById("themeBtn");
+            body.classList.toggle("light-mode");
+            themeBtn.innerText = body.classList.contains("light-mode") ? "🌙 Dark" : "☀️ Light";
+        }
+
+        function filterAnime() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const cards = document.getElementsByClassName("anime-card");
+            for (let i = 0; i < cards.length; i++) {
+                const title = cards[i].querySelector(".anime-title").innerText.toLowerCase();
+                cards[i].style.display = title.includes(input) ? "flex" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
